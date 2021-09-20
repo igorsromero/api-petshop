@@ -1,9 +1,24 @@
-const DadosNaoFornecidos = require("./erros/DadosNaoFornecidos");
 const ValorNaoSuportado = require("./erros/ValorNaoSuportado");
+const jsontoxml = require("jsontoxml");
 
 class Serializador {
     json(dados) {
         return JSON.stringify(dados)
+    }
+
+    xml(dados) {
+        let tag = this.tagSingular;
+
+        if (Array.isArray(dados)) {
+            tag = this.tagPlural;
+            dados = dados.map(item => {
+                return {
+                    [this.tagSingular]: item
+                }
+            });
+        }
+
+        return jsontoxml({ [tag]: dados });
     }
 
     serializar(dados) {
@@ -50,6 +65,8 @@ class SerializadorFornecedor extends Serializador {
         super()
         this.contentType = contentType;
         this.camposPublicos = ['id', 'empresa', 'categoria'].concat(camposExtras || []);
+        this.tagSingular = 'fornecedor';
+        this.tagPlural = 'fornecedores';
     }
 }
 
@@ -61,6 +78,8 @@ class SerializadorErro extends Serializador {
             'id',
             'mensagem'
         ].concat(camposExtras || []);
+        this.tag = 'erro';
+        this.tagPlural = 'erros';
     }
 }
 
