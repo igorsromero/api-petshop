@@ -5,7 +5,7 @@ class Serializador {
         return JSON.stringify(dados)
     }
 
-    serializar() {
+    serializar(dados) {
         if (this.contentType === "application/json") {
             return this.json(dados);
         }
@@ -14,7 +14,15 @@ class Serializador {
     }
 }
 
+class SerializadorFornecedor extends Serializador {
+    constructor(contentType) {
+        super()
+        this.contentType = contentType;
+    }
+}
+
 module.exports = {
     Serializador: Serializador,
+    SerializadorFornecedor: SerializadorFornecedor,
     formatosAceitos: ['application/json']
 }

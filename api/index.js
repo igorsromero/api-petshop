@@ -20,8 +20,7 @@ app.use((request, response, next) => {
 
     if (formatosAceitos.indexOf(formatoRequisitado) === -1) {
         response.sendStatus(406);
-        response.end();
-        return
+        return response.end();
     }
 
     response.setHeader("Content-Type", formatoRequisitado);
