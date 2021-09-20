@@ -7,10 +7,13 @@ class Serializador {
     }
 
     serializar(dados) {
+        dados = this.filtrar(dados)
         if (this.contentType === "application/json") {
-            return this.json(
-                this.filtrar(dados)
-            );
+            return this.json(dados);
+        }
+
+        if (this.contentType === 'application/xml') {
+            return this.xml(dados);
         }
 
         throw new ValorNaoSuportado(this.contentType);
@@ -43,15 +46,27 @@ class Serializador {
 }
 
 class SerializadorFornecedor extends Serializador {
-    constructor(contentType) {
+    constructor(contentType, camposExtras) {
         super()
         this.contentType = contentType;
-        this.camposPublicos = ['id', 'empresa', 'categoria'];
+        this.camposPublicos = ['id', 'empresa', 'categoria'].concat(camposExtras || []);
+    }
+}
+
+class SerializadorErro extends Serializador {
+    constructor(contentType, camposExtras) {
+        super();
+        this.contentType = contentType;
+        this.camposPublicos = [
+            'id',
+            'mensagem'
+        ].concat(camposExtras || []);
     }
 }
 
 module.exports = {
     Serializador: Serializador,
     SerializadorFornecedor: SerializadorFornecedor,
-    formatosAceitos: ['application/json']
+    SerializadorErro: SerializadorErro,
+    formatosAceitos: ['application/json', 'application/xml']
 }
