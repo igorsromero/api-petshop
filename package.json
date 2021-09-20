@@ -1,0 +1,12 @@
+{
+  "name": "api-petshop",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "config": "^3.3.6",
+    "express": "^4.17.1",
+    "mysql2": "^2.3.0",
+    "sequelize": "^6.6.5"
+  }
+}
