@@ -63,4 +63,25 @@ roteador.get("/:id", async (request, response, next) => {
     }
 });
 
+roteador.put("/:id", async (request, response, next) => {
+    try {
+        const dados = Object.assign(
+            {},
+            request.body,
+            {
+                id: request.params.id,
+                fornecedor: request.fornecedor.id
+            }
+        );
+
+        const produto = new Produto(dados);
+        await produto.atualizar();
+        response.status(204);
+        response.end();
+    } catch (erro) {
+        next(erro);
+    }
+
+});
+
 module.exports = roteador;
