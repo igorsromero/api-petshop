@@ -3,12 +3,19 @@ const TabelaFornecedor = require("./TabelaFornecedor");
 const Fornecedor = require("./Fornecedor");
 const SerializadorFornecedor = require("../../Serializador").SerializadorFornecedor;
 
+roteador.options("/", (request, response) => {
+    response.set("Access-Control-Allow-Methods", "GET, POST");
+    response.set("Access-Control-Allow-hEADERS", "Content-Type");
+    response.status(204);
+    response.end();
+});
+
 roteador.get("/", async (require, response) => {
     const resultados = await TabelaFornecedor.listar();
     response.status(200);
     const serializador = new SerializadorFornecedor(
         response.getHeader("Content-Type"),
-        ['email', 'dataCriacao', 'dataAtualizacao', 'versao']
+        ['empresa']
     )
     response.send(serializador.serializar(resultados));
 });
@@ -20,12 +27,20 @@ roteador.post("/", async (require, response, next) => {
         await fornecedor.criar();
         response.status(201);
         const serializador = new SerializadorFornecedor(
-            response.getHeader("Content-Type")
+            response.getHeader("Content-Type"),
+            ['empresa']
         )
         response.send(serializador.serializar(fornecedor));
     } catch (erro) {
         next(erro);
     }
+});
+
+roteador.options("/:idFornecedor", (request, response) => {
+    response.set("Access-Control-Allow-Methods", "GET, PUT, DELETE");
+    response.set("Access-Control-Allow-hEADERS", "Content-Type");
+    response.status(204);
+    response.end();
 });
 
 roteador.get("/:idFornecedor", async (request, response, next) => {
@@ -36,6 +51,7 @@ roteador.get("/:idFornecedor", async (request, response, next) => {
         response.status(200);
         const serializador = new SerializadorFornecedor(
             response.getHeader("Content-Type")
+            ['email', 'empresa', 'dataCriacao', 'dataAtualizacao', 'versao']
         )
         response.send(serializador.serializar(fornecedor))
     } catch (erro) {
