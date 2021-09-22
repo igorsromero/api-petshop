@@ -1,7 +1,6 @@
 const express = require("express");
 const config = require("config");
 const NaoEncontrado = require("./erros/NaoEncontrado");
-const roteador = require("./rotas/fornecedores");
 const CampoInvalido = require("./erros/CampoInvalido");
 const DadosNaoFornecidos = require("./erros/DadosNaoFornecidos");
 const ValorNaoSuportado = require("./erros/ValorNaoSuportado");
@@ -28,6 +27,12 @@ app.use((request, response, next) => {
     next();
 });
 
+app.use((request, response, next) => {
+    response.set("Access-Control-Allow-Origin", "*");
+    next();
+});
+
+const roteador = require("./rotas/fornecedores");
 app.use("/api/fornecedores", roteador);
 
 app.use((erro, request, response, next) => {
